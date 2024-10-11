@@ -96,4 +96,66 @@ writings = [
     {'filename': r'Crucible essay.txt', 'topic': 'your thoughts on mob mentality and critical thinking in respect to the play the Crucible'},
     {'filename': r'Favorite story 2.txt', 'topic': 'one of your favorite childhood stories to tell'},
     {'filename': r'Favorite story.txt', 'topic': 'a story you love to tell and says a lot about who you are'},
-    {'filenam
+    {'filename': r'Final Term Paper (1).txt', 'topic': 'your thoughts on How the New Deal Affected African Americans and Segregation in the form of a research paper'},
+    {'filename': r'full term paper.txt', 'topic': 'your thoughts on socrates and why he was killed in the form of a research paper'},
+    {'filename': r'Journaling.txt', 'topic': 'your ideas and thoughts about some journaling topics that interest you'},
+    {'filename': r'petite-A1.txt', 'topic': 'a technology that was important to you and how it shapped you'},
+    {'filename': r'poem analysis final.txt', 'topic': 'your thoughts and analysis about the poem Colonial Girls School'},
+    {'filename': r'primary source analysis.txt', 'topic': 'your thoughts and though process about a primary source that interests you'},
+    {'filename': r'Salvage the bones essay.txt', 'topic': 'your thoughts on women and motherhood in respect to the book Salvage the Bones'},
+    {'filename': r'Summer page.txt', 'topic': 'a experience you have had that was meaningful'},
+    {'filename': r'thanksgiving speech rearange.txt', 'topic': 'by giving an example of how you would write a speech about your thoughts on thanksgiving and life'},
+    {'filename': r'U.B.I. term paper (1).txt', 'topic': 'your thoughts on a U.B.I. in the form of a research paper'},
+]
+
+
+training_data = []
+"""
+for writing in writings:
+    # Read the content of each file
+    with open(os.path.join(r"/Users/maxpetite/Desktop/Colby 154/AI_avatar/writings_as_text/", writing['filename']), 'r', encoding='utf-8') as file:
+        content = file.read()
+
+    # Create a training example
+    example = {
+        "messages": [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": f"Could you explain {writing['topic']}?"},
+            {"role": "assistant", "content": content.strip()}
+        ]
+    }
+    training_data.append(example)
+
+# Save training data to a JSONL file
+with open('training_data.jsonl', 'w', encoding='utf-8') as outfile:
+    for entry in training_data:
+        json.dump(entry, outfile)
+        outfile.write('\n')
+
+"""
+def validate_jsonl(file_path):
+    with open(file_path, 'r', encoding='utf-8') as file:
+        for i, line in enumerate(file, 1):
+            try:
+                json.loads(line)
+            except json.JSONDecodeError as e:
+                print(f"Error in line {i}: {e}")
+                return False
+    print("All lines are valid JSON.")
+    return True
+
+validate_jsonl('training_data.jsonl')
+
+
+encoding = tiktoken.encoding_for_model('gpt-3.5-turbo-0613')
+max_tokens = 4096
+valid_training_data = []
+
+for entry in training_data:
+    total_tokens = 0
+    for message in entry['messages']:
+        total_tokens += len(encoding.encode(message['content']))
+    if total_tokens <= max_tokens:
+        valid_training_data.append(entry)
+    else:
+        print(f"Entry exceeds token limit and will be excluded: {entry['messages'][1]['content']}")
