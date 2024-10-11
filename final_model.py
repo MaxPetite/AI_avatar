@@ -2,39 +2,6 @@ import os
 import openai
 from openai import OpenAI
 
-# Set your OpenAI API key
-openai.api_key = os.getenv('OPENAI_API_KEY')
-
-client = OpenAI()
-"""
-# Upload the training data file
-training_file = client.files.create(
-    file=open("training_data.jsonl", "rb"),
-    purpose="fine-tune"
-)
-
-# Get the ID of the uploaded file
-training_file_id = training_file.id
-print(f"Training file uploaded with ID: {training_file_id}")
-
-# Create a fine-tuning job
-
-fine_tune_job = client.fine_tuning.jobs.create(
-  training_file= training_file_id,
-  model="gpt-4o-mini-2024-07-18"
-)
-"""
-# Get the ID of the fine-tuning job
-fine_tune_job_id = 'ftjob-t7PTo6MxpFsvcAuYjCUCwUqX' #fine_tune_job.id
-print(f"Fine-tuning job started with ID: {fine_tune_job_id}")
-
-# Define the system prompt
-system_prompt = (
-    "You are Max Petite, a 19-year-old college student from St. Louis, Missouri, studying at Colby College. "
-    "You have interests in philosophy, literature, and computer science. "
-    "Respond to the user as yourself, sharing your insights and understanding."
-)
-
 # Synthetic conversation (full interview)
 synthetic_conversation = [
     {"role": "user", "content": "Max, could you tell me about where you were born and where you grew up?"},
@@ -181,26 +148,36 @@ synthetic_conversation2 = [
     }
 ]
 
-fine_tune_job = client.fine_tuning.jobs.retrieve(fine_tune_job_id)
-fine_tuned_model_name = fine_tune_job.fine_tuned_model
-print(f"Fine-tuned model name: {fine_tuned_model_name}")
-
-# New user message
-new_user_message = {
-    "role": "user",
-    "content": "How would you describe yourself? What are your most important beliefs?"
-}
-
-# Combine the system prompt, synthetic conversation, and new user message
-messages = synthetic_conversation + synthetic_conversation2 + [new_user_message]
-
-completion = client.chat.completions.create(
-    model=fine_tuned_model_name,
-    messages=[
-        {"role": "system", "content": system_prompt},
-        *messages
-    ]
+system_prompt = (
+    "You are Max Petite, a 19-year-old college student from St. Louis, Missouri, studying at Colby College. "
+    "You have interests in philosophy, literature, and computer science. "
+    "Respond to the user as yourself, sharing your insights and understanding."
 )
 
-print(completion.choices[0].message)
+synthetic_conversation = synthetic_conversation + synthetic_conversation2
 
+# Initialize conversation messages with system prompt and synthetic conversation
+messages = [
+    {"role": "system", "content": system_prompt},
+    *synthetic_conversation,
+]
+
+# Get fine-tuned model name from the fine-tuning job
+fine_tune_job_id = 'ftjob-t7PTo6MxpFsvcAuYjCUCwUqX' 
+client = openai.OpenAI()
+fine_tune_job = client.fine_tuning.jobs.retrieve(fine_tune_job_id)
+fine_tuned_model_name = fine_tune_job.fine_tuned_model
+
+# Function to get a response from the fine-tuned model
+def get_response(user_input):
+    messages.append({"role": "user", "content": user_input})
+    try:
+        response = openai.ChatCompletion.create(
+            model=fine_tuned_model_name,
+            messages=messages
+        )
+        assistant_message = response.choices[0].message['content']
+        messages.append({"role": "assistant", "content": assistant_message})
+        return assistant_message
+    except Exception as e:
+        return f"An error occurred: {e}"
