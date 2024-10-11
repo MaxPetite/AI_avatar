@@ -82,37 +82,38 @@ system_prompt = "You are a 19 year old male college student name Max Petite at c
 
 # List of your writings with associated topics
 writings = [
-    {'filename': 'Abortion Paper.txt', 'topic': 'an opion and perspective on abortion'},
-    {'filename': 'Catcher in the rye.txt', 'topic': ' an interpretation of the Catcher in the Rye in respect to your own life and ideas of purpose'},
-    {'filename': 'Chillingsworth Analytical.txt', 'topic': 'the character Chillingsworth from the Scarlet Letter and what he represent'},
-    {'filename': 'CNF final.txt', 'topic': 'how you have been influenced by your brother and a meaningful experience with authenticity you have had'},
-    {'filename': 'College Essay- English.txt', 'topic': 'how you view yourself and how that has changed over time'},
-    {'filename': 'Copy of Essay #3(1).txt', 'topic': 'your thoughts on determinism and free will'},
-    {'filename': 'Copy of final paper.txt', 'topic': 'how you view beauty and how you came to that understanding of it'},
-    {'filename': 'Copy of much ado- in class.txt', 'topic': 'your thoughts and analysis of a scene from Much Ado About Nothing'},
-    {'filename': 'Copy of paper #2.txt', 'topic': 'your thoughts on community and your experiences with it'},
-    {'filename': 'Copy of PLAM essay.txt', 'topic': 'your thoughts on appreciation in respect to the book Please Look After Mom'},
-    {'filename': 'Copy of Slaughterhouse five essay.txt', 'topic': 'your thoughts on what Slaughterhouse five is about and represents'},
-    {'filename': 'Crucible essay.txt', 'topic': 'your thoughts on mob mentality and critical thinking in respect to the play the Crucible'},
-    {'filename': 'Favorite story 2.txt', 'topic': 'one of your favorite childhood stories to tell'},
-    {'filename': 'Favorite story.txt', 'topic': 'a story you love to tell and says a lot about who you are'},
-    {'filename': 'Final Term Paper(1).txt', 'topic': 'your thoughts on How the New Deal Affected African Americans and Segregation in the form of a research paper'},
-    {'filename': 'full term paper.txt', 'topic': 'your thoughts on socrates and why he was killed in the form of a research paper'},
-    {'filename': 'Journaling.txt', 'topic': 'your ideas and thoughts about some journaling topics that interest you'},
-    {'filename': 'petite-A1.txt', 'topic': 'a technology that was important to you and how it shapped you'},
-    {'filename': 'poem analysis final.txt', 'topic': 'your thoughts and analysis about the poem Colonial Girls School'},
-    {'filename': 'primary source analysis.txt', 'topic': 'your thoughts and though process about a primary source that interests you'},
-    {'filename': 'Salvafe the bones essay.txt', 'topic': 'your thoughts on women and motherhood in respect to the book Salvage the Bones'},
-    {'filename': 'Summer page.txt', 'topic': 'a experience you have had that was meaningful'},
-    {'filename': 'thanksgiving speech rearange.txt', 'topic': 'by giving an example of how you would write a speech about your thoughts on thanksgiving and life'},
-    {'filename': 'U.B.I. term paper.txt', 'topic': 'your thoughts on a U.B.I. in the form of a research paper'},
+    {'filename': r'Abortion Paper.txt', 'topic': 'an opion and perspective on abortion'},
+    {'filename': r'Catcher in the rye personal essay.txt', 'topic': ' an interpretation of the Catcher in the Rye in respect to your own life and ideas of purpose'},
+    {'filename': r'Chillingworth Analytical.txt', 'topic': 'the character Chillingsworth from the Scarlet Letter and what he represent'},
+    {'filename': r'CNF final.txt', 'topic': 'how you have been influenced by your brother and a meaningful experience with authenticity you have had'},
+    {'filename': r'College Essay- English.txt', 'topic': 'how you view yourself and how that has changed over time'},
+    {'filename': r'Copy of Essay #3(1).txt', 'topic': 'your thoughts on determinism and free will'},
+    {'filename': r'Copy of final paper.txt', 'topic': 'how you view beauty and how you came to that understanding of it'},
+    {'filename': r'Copy of much ado- in class.txt', 'topic': 'your thoughts and analysis of a scene from Much Ado About Nothing'},
+    {'filename': r'Copy of paper #2.txt', 'topic': 'your thoughts on community and your experiences with it'},
+    {'filename': r'Copy of PLAM essay.txt', 'topic': 'your thoughts on appreciation in respect to the book Please Look After Mom'},
+    {'filename': r'Copy of Slaughterhouse five essay.txt', 'topic': 'your thoughts on what Slaughterhouse five is about and represents'},
+    {'filename': r'Crucible essay.txt', 'topic': 'your thoughts on mob mentality and critical thinking in respect to the play the Crucible'},
+    {'filename': r'Favorite story 2.txt', 'topic': 'one of your favorite childhood stories to tell'},
+    {'filename': r'Favorite story.txt', 'topic': 'a story you love to tell and says a lot about who you are'},
+    {'filename': r'Final Term Paper (1).txt', 'topic': 'your thoughts on How the New Deal Affected African Americans and Segregation in the form of a research paper'},
+    {'filename': r'full term paper.txt', 'topic': 'your thoughts on socrates and why he was killed in the form of a research paper'},
+    {'filename': r'Journaling.txt', 'topic': 'your ideas and thoughts about some journaling topics that interest you'},
+    {'filename': r'petite-A1.txt', 'topic': 'a technology that was important to you and how it shapped you'},
+    {'filename': r'poem analysis final.txt', 'topic': 'your thoughts and analysis about the poem Colonial Girls School'},
+    {'filename': r'primary source analysis.txt', 'topic': 'your thoughts and though process about a primary source that interests you'},
+    {'filename': r'Salvage the bones essay.txt', 'topic': 'your thoughts on women and motherhood in respect to the book Salvage the Bones'},
+    {'filename': r'Summer page.txt', 'topic': 'a experience you have had that was meaningful'},
+    {'filename': r'thanksgiving speech rearange.txt', 'topic': 'by giving an example of how you would write a speech about your thoughts on thanksgiving and life'},
+    {'filename': r'U.B.I. term paper (1).txt', 'topic': 'your thoughts on a U.B.I. in the form of a research paper'},
 ]
 
-training_data = []
 
+training_data = []
+"""
 for writing in writings:
     # Read the content of each file
-    with open(os.path.join('path_to_your_writings', writing['filename']), 'r', encoding='utf-8') as file:
+    with open(os.path.join(r"/Users/maxpetite/Desktop/Colby 154/AI_avatar/writings_as_text/", writing['filename']), 'r', encoding='utf-8') as file:
         content = file.read()
 
     # Create a training example
@@ -158,4 +159,3 @@ for entry in training_data:
         valid_training_data.append(entry)
     else:
         print(f"Entry exceeds token limit and will be excluded: {entry['messages'][1]['content']}")
-"""
