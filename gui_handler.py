@@ -1,50 +1,64 @@
-import tkinter as tk
-from tkinter import scrolledtext
-from model_handler import get_response
+from dearpygui import dearpygui as dpg
+from final_model import get_response, save_convo
+#from voice_clonner import speak
 
-# GUI application using Tkinter
-class ChatApplication:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("Chat with Max")
 
-        # Chat display area
-        self.chat_display = scrolledtext.ScrolledText(root, wrap=tk.WORD, state='disabled', width=80, height=20)
-        self.chat_display.grid(row=0, column=0, columnspan=2, padx=10, pady=10)
+# Create a callback for sending messages
+def send_message(sender, app_data, user_data):
+    user_message = dpg.get_value('input_text')
+    if user_message.strip() != '':
+        # Replace curly apostrophes with straight apostrophes to avoid encoding issues
+        user_message = user_message.replace('’', "'").replace('‘', "'")
+        dpg.add_text(f'You: {user_message}', parent='chat_window', wrap=750, bullet=True, color=(0, 130, 200))
+        response = get_response(user_message)
+        #print(response)
+        response = response.replace('’', "'").replace('‘', "'")  # Ensure response also handles apostrophes correctly
+        dpg.add_text(f'Max: {response}', parent='chat_window', wrap=750, bullet=True, color=(255, 255, 255))
+        #speak(response)
+        dpg.set_value('input_text', '')
 
-        # User input area
-        self.user_input = tk.Entry(root, width=60)
-        self.user_input.grid(row=1, column=0, padx=10, pady=10)
+# Create the main window
+dpg.create_context()
 
-        # Send button
-        self.send_button = tk.Button(root, text="Send", command=self.send_message)
-        self.send_button.grid(row=1, column=1, padx=10, pady=10)
+dpg.create_viewport(title='Chat with Max', width=850, height=750, min_width=850, min_height=750)
 
-    def send_message(self):
-        user_message = self.user_input.get()
-        if user_message.strip() == "":
-            return
+with dpg.theme() as global_theme:
+    with dpg.theme_component(dpg.mvAll):
+        dpg.add_theme_color(dpg.mvThemeCol_WindowBg, (255, 255, 255, 255))
+        dpg.add_theme_color(dpg.mvThemeCol_Text, (255, 255, 255, 255))
+        dpg.add_theme_color(dpg.mvThemeCol_Button, (0, 122, 204))
+        dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered, (0, 162, 255))
+        dpg.add_theme_color(dpg.mvThemeCol_ButtonActive, (0, 102, 153))
+        dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, 10)
+        dpg.add_theme_style(dpg.mvStyleVar_FramePadding, 12, 12)
+        dpg.add_theme_style(dpg.mvStyleVar_WindowBorderSize, 1)
+        dpg.add_theme_color(dpg.mvThemeCol_Border, (150, 150, 150, 255))
+        dpg.add_theme_style(dpg.mvStyleVar_ItemSpacing, 8, 8)
+    with dpg.theme_component(dpg.mvInputText):
+        dpg.add_theme_color(dpg.mvThemeCol_FrameBg, (255, 255, 255))  
+        dpg.add_theme_color(dpg.mvThemeCol_Text, (0, 0, 0))  
 
-        # Display user message
-        self.update_chat_display(f"You: {user_message}\n")
+# Add a font registry to increase font size
+with dpg.font_registry():
+    default_font = dpg.add_font("ARIAL.TTF", 20)
 
-        # Get response from the model
-        assistant_response = get_response(user_message)
+with dpg.window(label='Chat with Max', tag='main_window', width=800, height=700, pos=(25, 25), no_title_bar=False, no_resize=False):
+    with dpg.child_window(tag='chat_window', width=780, height=520, border=True):
+        dpg.add_text("Chat with Max", wrap=750, color=(0, 130, 200), bullet=False)
+    
+    with dpg.group(horizontal=True, indent=5, horizontal_spacing=10):
+        dpg.add_input_text(tag='input_text', width=580, height=40, hint='Type your message here...', indent=5, callback=None)
+        dpg.add_spacer(width=10)
+        dpg.add_button(label='Send', callback=send_message, width=120, height=40)
 
-        # Display assistant message
-        self.update_chat_display(f"Max: {assistant_response}\n")
+# Apply the global theme and bind the font
+dpg.bind_theme(global_theme)
+dpg.bind_font(default_font)
 
-        # Clear user input field
-        self.user_input.delete(0, tk.END)
+# Set up and start the Dear PyGui application
+dpg.setup_dearpygui()
+dpg.show_viewport()
+dpg.start_dearpygui()
+dpg.destroy_context()
 
-    def update_chat_display(self, message):
-        self.chat_display.config(state='normal')
-        self.chat_display.insert(tk.END, message)
-        self.chat_display.yview(tk.END)
-        self.chat_display.config(state='disabled')
-
-# Run the GUI application
-if __name__ == "__main__":
-    root = tk.Tk()
-    chat_app = ChatApplication(root)
-    root.mainloop()
+save_convo()
