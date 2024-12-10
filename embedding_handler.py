@@ -49,7 +49,7 @@ def retrieve_relevant_knowledge(query, index, knowledge_base, k=3):
     query_embedding = generate_embedding(query)
     query_vector = np.array([query_embedding]).astype('float32')
    
-    D, I = index.search(query_vector, k)
+    D, I = index.search(query_vector, k)  # noqa: E741
     
     relevant_knowledge = [knowledge_base[i]["text"] for i in I[0]]
     return relevant_knowledge

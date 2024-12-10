@@ -1,7 +1,7 @@
 #import docx
 import os
 import json
-import tiktoken
+#import tiktoken
 import glob
 from docx import Document
 import PyPDF2
