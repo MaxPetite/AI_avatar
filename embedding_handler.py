@@ -35,6 +35,7 @@ def create_embeddings(knowledge_base, index_file="embeddings.index", json_file="
         json.dump(knowledge_base, f)
     
     print("Embeddings and index successfully saved.")
+    
 
 def load_embeddings(index_file="embeddings.index", json_file="knowledge_base.json"):
 

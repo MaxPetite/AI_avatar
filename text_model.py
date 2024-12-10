@@ -13,6 +13,8 @@ training_file = client.files.create(
     purpose="fine-tune"
 )
 
+export OPENAI_API_KEY='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'
+
 # Get the ID of the uploaded file
 training_file_id = training_file.id
 print(f"Training file uploaded with ID: {training_file_id}")
