@@ -15,29 +15,97 @@ def home():
     <html>
     <head>
         <title>Chat with Max</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background: linear-gradient(135deg, #8e44ad, #3498db);
+                height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .glass-container {
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 16px;
+                box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+                border: 1px solid rgba(255, 255, 255, 0.18);
+                width: 40%;
+                max-width: 500px;
+                padding: 20px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+            #chat_window {
+                height: 300px;
+                overflow-y: auto;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                padding: 10px;
+                margin-bottom: 15px;
+                color: white;
+                font-size: 14px;
+            }
+            #input_area {
+                display: flex;
+                gap: 10px;
+            }
+            #input_text {
+                flex: 1;
+                border: none;
+                padding: 10px;
+                border-radius: 8px;
+                font-size: 16px;
+                color: #333;
+                background: rgba(255, 255, 255, 0.7);
+                outline: none;
+            }
+            #send_button {
+                padding: 10px 20px;
+                border: none;
+                border-radius: 8px;
+                background: linear-gradient(135deg, #ff7eb3, #ff758c);
+                color: white;
+                font-size: 16px;
+                cursor: pointer;
+                transition: 0.3s ease;
+            }
+            #send_button:hover {
+                background: linear-gradient(135deg, #ff758c, #ff7eb3);
+            }
+        </style>
     </head>
-    <body style="font-family: Arial, sans-serif;">
-        <h1>Chat with Max</h1>
-        <div id="chat_window" style="border: 1px solid #ccc; padding: 10px; width: 60%; height: 300px; overflow-y: auto; margin-bottom: 10px;"></div>
-        <input id="input_text" type="text" style="width: 60%; height: 30px;" placeholder="Type your message here...">
-        <button onclick="sendMessage()" style="height: 36px;">Send</button>
+    <body>
+        <div class="glass-container">
+            <div id="chat_window"></div>
+            <div id="input_area">
+                <input id="input_text" type="text" placeholder="Type your message here...">
+                <button id="send_button" onclick="sendMessage()">Send</button>
+            </div>
+        </div>
         <script>
             async function sendMessage() {
                 const userMessage = document.getElementById('input_text').value;
+                if (!userMessage.trim()) return;
+
                 const response = await fetch('/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ message: userMessage })
                 });
                 const data = await response.json();
+                const chatWindow = document.getElementById('chat_window');
+
                 if (data.response) {
-                    // Display messages in the chat window
-                    const chatWindow = document.getElementById('chat_window');
                     chatWindow.innerHTML += `<p><strong>You:</strong> ${userMessage}</p>`;
                     chatWindow.innerHTML += `<p><strong>Max:</strong> ${data.response}</p>`;
-                    chatWindow.scrollTop = chatWindow.scrollHeight;  // Auto-scroll to the bottom
                 }
-                document.getElementById('input_text').value = '';  // Clear input field
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+                document.getElementById('input_text').value = '';
             }
         </script>
     </body>
